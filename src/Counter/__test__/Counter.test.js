@@ -1,6 +1,6 @@
 import react from "react"
 import Counter from "../Counter"
-import { render } from "@testing-library/react"
+import { render,fireEvent } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
 
 test("header renders with correct text",() => {
@@ -40,3 +40,79 @@ test("add button renders with plus sign",() => {
 
   expect(subtractBtn.textContent).toBe("-")
 })
+
+test("change value of input works correctly",() => {
+  const {getByTestId} = render(<Counter/>);
+  const inputEle = getByTestId("input");
+
+  expect(inputEle.value).toBe("1")
+
+  fireEvent.change(inputEle,{
+    target:{
+      value:"5"
+    }
+  })
+
+  expect(inputEle.value).toBe("5");
+
+})
+
+test("clicking on plus button adds 1 to counter",() => {
+  const {getByTestId} = render(<Counter/>);
+  const btnEle = getByTestId("add-btn");
+  const counterEl = getByTestId("counter")
+
+  expect(counterEl.textContent).toBe("0")
+
+  fireEvent.click(btnEle);
+
+  expect(counterEl.textContent).toBe("1")
+})
+
+test("clicking on subtract button subtracts 1 from counter",() => {
+  const {getByTestId} = render(<Counter/>);
+  const btnEle = getByTestId("subtract-btn");
+  const counterEl = getByTestId("counter")
+
+  expect(counterEl.textContent).toBe("0")
+
+  fireEvent.click(btnEle);
+
+  expect(counterEl.textContent).toBe("-1")
+})
+
+test("changing input value then clicking on add works correctly ",() => {
+  const {getByTestId} = render(<Counter/>);
+  const btnEle = getByTestId("add-btn");
+  const counterEl = getByTestId("counter")
+  const inputEle = getByTestId("input")
+
+  fireEvent.change(inputEle,{
+    target:{
+      value: 5
+    }
+  })
+
+  fireEvent.click(btnEle);
+
+  expect(counterEl.textContent).toBe("5")
+})
+
+test("changing input value then clicking on subtract works correctly ",() => {
+  const {getByTestId} = render(<Counter/>);
+  const btnEle = getByTestId("subtract-btn");
+  const counterEl = getByTestId("counter")
+  const inputEle = getByTestId("input")
+
+  fireEvent.change(inputEle,{
+    target:{
+      value: 5
+    }
+  })
+
+  fireEvent.click(btnEle);
+
+  expect(counterEl.textContent).toBe("-5")
+})
+
+
